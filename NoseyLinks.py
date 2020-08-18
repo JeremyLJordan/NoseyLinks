@@ -4,7 +4,6 @@ import argparse
 import random
 import re
 import string
-
 import bs4
 import urllib3
 
