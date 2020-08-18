@@ -14,24 +14,20 @@ run setup.py:
 
 ## Usage
 ```
-python NoseyLinks.py
+python NoseyLinks.py [-h] [-u URL] [-a ATTEMPTS] [-v VERBOSE] [-o OUTPUT]
+
+optional arguments:
+  -h, --help         show this help message and exit
+  -u URL, --url      set shortener url, default = tinyurl
+  -a, --attempts     attempts, default = 10
+  -v, --verbose      enables verbose mode
+  -o, --output       output file for results
 ```
 
 ## Example Output
 ```
-Which site do you want to use?
-1 = TinyUrl.com
-2 = Bit.ly
-"1"
 
-TinyUrl selected...
-Would method you like to use?
-1 = Word list
-2 = Make random attempts
-"2"
-
-How many attempts would you like to make?
-"6"
+python NoseyLinks.py -u tinyurl.com -a 6 -v -o NoseyLinksLog.txt
 
 https://tinyurl.com/792211s | Title: "Page not found | Comanche Nation"
 https://tinyurl.com/joxg0uc | Title: "99acres - Login"
