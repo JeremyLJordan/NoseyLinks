@@ -1,17 +1,19 @@
-#!/usr/bin/python3
+#! /usr/bin/python3
 
+import argparse
 import random
+import re
 import string
+
 import bs4
 import urllib3
-import re
 
 '''
-Short Link Enumerator
+Nosey Links
 
 By: N3ON
 
-Description: The purpose of SLE is to enumerate common url shorteners,
+Description: The purpose of Nosey Links is to enumerate common url shortener's
 by generating random links and getting the website's title information.
 The link generated will be shown as well as the title of the page the link 
 forwards to.
@@ -19,70 +21,73 @@ forwards to.
 Follow Me On Twitter: @N3ON_ONE
 '''
 
+# parser stuff
+parser = argparse.ArgumentParser()
+parser.add_argument('-u', "--url", help="set shortener url, default = tinyurl", default="https://www.tinyurl.com")
+parser.add_argument('-a', "--attempts", help="attempts, default = 10", type=int, default=10)
+parser.add_argument('-v', "--verbose", help="enables verbose mode", default=True)
+parser.add_argument('-o', "--output", help="output file for results", default="output.txt")
+args = parser.parse_args()
+
+
+def main():
+    print('''
+ ____    ___    _____   ___  __ __      _      ____  ____   __  _   _____
+|    \  /   \  / ___/  /  _]|  T  T    | T    l    j|    \ |  l/ ] / ___/
+|  _  YY     Y(   \_  /  [_ |  |  |    | |     |  T |  _  Y|  ' / (   \_
+|  |  ||  O  | \__  TY    _]|  ~  |    | l___  |  | |  |  ||    \  \__  T
+|  |  ||     | /  \ ||   [_ l___, |    |     T |  | |  |  ||     Y /  \ |
+|  |  |l     ! \    ||     T|     !    |     | j  l |  |  ||  .  | \    |
+l__j__j \___/   \___jl_____jl____/     l_____j|____jl__j__jl__j\_j  \___j
+''')
+    print('PLEASE REMEMBER THERE IS AN INHERENT RISK WITH CLICKING RANDOM LINKS FROM THE INTERNET')
+    print('TWITTER: N3ON_ONE''\n''\n''\n')
+
+    # choice logic
+    for a in range(args.attempts):
+        url = args.url + "/" + str(rand_alphanum())  # concatenates the domain and the random subdirectory
+        title = str(web_request(url))
+        if "Bitly | Page Not Found | 404" in title:
+            pass
+        elif "TinyURL.com - shorten that long URL into a tiny URL" in title:
+            pass
+        elif "None" in title:
+            pass
+        else:
+            print(url + " | " + "Title: " + '"' + str(title) + '"')  # prints final result
+
 
 # generate random seven digit alphanumeric string (standard length)
 def rand_alphanum():
-    subdirectory = ''.join(random.choices(string.ascii_lowercase +
-                                          string.digits, k=7))
-    return subdirectory
+    subdir = ''.join(random.choices(string.ascii_lowercase +
+                                    string.digits, k=7))
+    return subdir
 
 
 # removes html tags
 def clean_results(html):
-    cleaner = re.compile('<.*?>')
-    cleantext = re.sub(cleaner, '', str(html))
-    return cleantext
+    cln = re.compile('<.*?>')
+    cln_txt = re.sub(cln, '', str(html))
+    return cln_txt
 
 
-# takes url submitted and creates get request returning 
-def web_request(full_url):
+# takes url submitted and creates get request returning
+def web_request(url):
     try:
         http = urllib3.PoolManager()
-        req = http.request('GET', full_url, timeout=4.0, redirect=True)
+        req = http.request('GET', url, timeout=4.0, redirect=True)
         html = req.data
         soup = bs4.BeautifulSoup(html, features="html.parser")
         result = soup.find('title')
         result = clean_results(result)
         return result
-    except Exception as e: #exception too broad needs to be fixed
-        print("Load Error...")
+
+    except Exception as e:  # exception too broad needs to be fixed
+        if args.verbose:
+            print("Load Error...")
+
+    # start main function
 
 
-def main():
-    # establishes which site to use
-    domain_bool = input('Which site do you want to use?\n'
-                        + '1 = TinyUrl.com\n'
-                        + '2 = Bit.ly\n')
-    # choice logic
-    if domain_bool == '1':
-        domain = str("https://tinyurl.com/")
-        print('TinyUrl selected...')
-    elif domain_bool == '2':
-        domain = str("https://bit.ly/")
-        print("Bit.ly selected...")
-    else:
-        print('invalid option, better luck next time!')
-        main()
-
-    # establishes if wordlist or random attempts will be used
-    method_of_work = input('Would method you like to use?\n'
-                           + '1 = Word list\n'
-                           + '2 = Make random attempts\n')
-    # choice logic
-    if method_of_work == '1':
-        print("coming soon")
-        main()
-    elif method_of_work == '2':
-        num_attempts = int(input('How many attempts would you like to make?\n'))  # number of attempts
-        for i in range(num_attempts):
-            full_url = domain + str(rand_alphanum())  # concatenates the domain and the random subdirectory
-            print(full_url + " | " + "Title: " + '"' + str(web_request(full_url)) + '"')  # prints final result
-
-    else:
-        print("invalid input")
-        main()
-
-
-# start main function
 if __name__ == "__main__":
     main()
