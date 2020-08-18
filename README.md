@@ -4,7 +4,6 @@ and checking to see if they have been used before.
 If so, the title of the page linked to is returned for review..
 	
 ## Technologies
-Project is created with:
 * Python 3.8
 * Beautiful Soup
 * Urllib3
@@ -18,7 +17,7 @@ python NoseyLinks.py [-h] [-u URL] [-a ATTEMPTS] [-v VERBOSE] [-o OUTPUT]
 
 optional arguments:
   -h, --help         show this help message and exit
-  -u URL, --url      set shortener url, default = tinyurl
+  -u, --url          set shortener url, default = tinyurl
   -a, --attempts     attempts, default = 10
   -v, --verbose      enables verbose mode
   -o, --output       output file for results
