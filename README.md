@@ -9,7 +9,7 @@ If so, the title of the page linked to is returned for review..
 * Urllib3
 	
 ## Setup
-run setup.py:
+pip install -r requirements.txt:
 
 ## Usage
 ```
